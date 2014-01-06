@@ -1,0 +1,7 @@
+<OutOfBrowserSettings ShortName="Triptych.Demo.Silverlight.Webcams Application" EnableGPUAcceleration="True" ShowInstallMenuItem="True">
+  <OutOfBrowserSettings.Blurb>Triptych.Demo.Silverlight.Webcams Application on your desktop; at home, at work or on the go.</OutOfBrowserSettings.Blurb>
+  <OutOfBrowserSettings.WindowSettings>
+    <WindowSettings Title="Triptych.Demo.Silverlight.Webcams Application" />
+  </OutOfBrowserSettings.WindowSettings>
+  <OutOfBrowserSettings.Icons />
+</OutOfBrowserSettings>

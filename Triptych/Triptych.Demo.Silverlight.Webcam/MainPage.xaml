@@ -1,0 +1,107 @@
+﻿<!--
+Project: Triptych (http://triptych.codeplex.com)
+Filename: Triptych.Demo.Silverlight.Webcams\MainPage.xaml
+Version: 20140106
+-->
+  
+<UserControl
+  x:Class="Triptych.Demo.Silverlight.Webcams.MainPage"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  mc:Ignorable="d"
+  d:DesignWidth="1024" d:DesignHeight="768"
+  >
+
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <SolidColorBrush x:Key="ScreenBackground" Color="Black" />
+      <SolidColorBrush x:Key="TriptychBackground" Color="White" />     
+    </ResourceDictionary>
+  </UserControl.Resources>
+  
+  <Border
+    Background="{Binding Source={StaticResource ScreenBackground}}"
+    HorizontalAlignment="Stretch"
+    VerticalAlignment="Stretch"
+    >
+
+    <Viewbox
+      HorizontalAlignment="Stretch"
+      >
+
+      <Border
+        Background="{Binding Source={StaticResource TriptychBackground}}"
+        Padding="5"
+        >
+      
+        <Grid
+          x:Name="LayoutRoot"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch"
+          >
+
+          <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="400"/>
+            <RowDefinition />
+          </Grid.RowDefinitions>
+
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="900"/>
+            <ColumnDefinition />
+          </Grid.ColumnDefinitions>
+
+          <Canvas
+            Grid.Row="1"
+            Grid.Column="1"
+            >
+
+            <Rectangle
+              x:Name="ViewportLeft"
+              Fill="Red"
+              StrokeThickness="0"
+              Canvas.Left="-230"
+              Canvas.Top="0"
+              Width="450"
+              Height="400"
+              FlowDirection="RightToLeft"
+              MouseLeftButtonDown="ViewportLeft_MouseLeftButtonDown"
+              />
+
+            <Rectangle
+              x:Name="ViewportCenter"
+              Fill="Green"
+              StrokeThickness="0"
+              Canvas.Left="225"
+              Canvas.Top="0"
+              Width="450"
+              Height="400"
+              MouseLeftButtonDown="ViewportCenter_MouseLeftButtonDown"
+              />
+
+            <Rectangle
+              x:Name="ViewportRight"
+              Fill="Blue"
+              StrokeThickness="0"
+              Canvas.Left="680"
+              Canvas.Top="0"
+              Width="450"
+              Height="400"
+              FlowDirection="RightToLeft"
+              MouseLeftButtonDown="ViewportRight_MouseLeftButtonDown"
+              />
+
+          </Canvas>
+
+        </Grid>
+
+      </Border>
+
+    </Viewbox>
+
+  </Border>
+
+</UserControl>

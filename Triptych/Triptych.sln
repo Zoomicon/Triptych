@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triptych.Demo.Silverlight.Webcams", "Triptych.Demo.Silverlight.Webcam\Triptych.Demo.Silverlight.Webcams.csproj", "{56285552-ABB8-4BBA-A67C-7DC108D75CCF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triptych.Demo.Silverlight.Webcams.Web", "Triptych.Demo.Silverlight.Webcam.Web\Triptych.Demo.Silverlight.Webcams.Web.csproj", "{5FEE3FA7-1217-48B5-9B62-13205E9E0E5D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triptych.Demo.WPF.ImageFolders", "Triptych.Demo.WPF.ImageFolders\Triptych.Demo.WPF.ImageFolders.csproj", "{5BDD8301-B679-4AAB-BB2A-0EE6212FD86E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{56285552-ABB8-4BBA-A67C-7DC108D75CCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56285552-ABB8-4BBA-A67C-7DC108D75CCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56285552-ABB8-4BBA-A67C-7DC108D75CCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56285552-ABB8-4BBA-A67C-7DC108D75CCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FEE3FA7-1217-48B5-9B62-13205E9E0E5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FEE3FA7-1217-48B5-9B62-13205E9E0E5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FEE3FA7-1217-48B5-9B62-13205E9E0E5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FEE3FA7-1217-48B5-9B62-13205E9E0E5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BDD8301-B679-4AAB-BB2A-0EE6212FD86E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BDD8301-B679-4AAB-BB2A-0EE6212FD86E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BDD8301-B679-4AAB-BB2A-0EE6212FD86E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BDD8301-B679-4AAB-BB2A-0EE6212FD86E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
