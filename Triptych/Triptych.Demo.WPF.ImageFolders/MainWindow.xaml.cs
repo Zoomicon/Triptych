@@ -1,7 +1,7 @@
 ﻿/*
 Project: Triptych (http://triptych.codeplex.com)
 Filename: Triptych.Demo.Silverlight.Webcam\MainPage.xaml.cs
-Version: 20140102
+Version: 20140109
 */
 
 using System.Linq;
@@ -12,6 +12,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Interop;
 
 namespace Triptych.Demo.WPF.ImageFolders
 {
@@ -50,7 +51,7 @@ namespace Triptych.Demo.WPF.ImageFolders
           imageSources.Add(new BitmapImage(new Uri(filename, UriKind.RelativeOrAbsolute)));
       }
       catch {
-        Stop();
+        Clear();
         return;
       }
 
@@ -63,16 +64,17 @@ namespace Triptych.Demo.WPF.ImageFolders
       imageBrushRight = new ImageBrush() { Stretch = Stretch.UniformToFill };
 
       Vision v = new Vision();
-      v.Start();
+      v.Start(new WindowInteropHelper(this).Handle, 100, 100); //(int)Width, (int)Height
 
       if (!initialized)
       {
-        Start();
+        Update();
         initialized = true;
       }
     }
 
-    public void Start() {
+    public void Update()
+    {
       try
       {
         imageBrushLeft.ImageSource = imageSources[imageSourceLeftIndex];
@@ -89,7 +91,7 @@ namespace Triptych.Demo.WPF.ImageFolders
       }
     }
 
-    public void Stop()
+    public void Clear()
     {
       try
       {
@@ -102,39 +104,101 @@ namespace Triptych.Demo.WPF.ImageFolders
         //NOP
       }
     }
-
-    public void Restart()
+    
+    public void PreviousLeft()
     {
-      Stop();
-      Start();
+      imageSourceLeftIndex = CoerceIndex(imageSourceLeftIndex - 1);
+      Update();
     }
 
+    public void NextLeft()
+    {
+      imageSourceLeftIndex = CoerceIndex(imageSourceLeftIndex + 1);
+      Update();
+    }
+
+    public void PreviousCenter()
+    {
+      imageSourceCenterIndex = CoerceIndex(imageSourceCenterIndex - 1);
+      Update();
+    }
+
+    public void NextCenter()
+    {
+      imageSourceCenterIndex = CoerceIndex(imageSourceCenterIndex + 1);
+      Update();
+    }
+
+    public void CenterToLeftRight()
+    {
+      imageSourceRightIndex = imageSourceLeftIndex = imageSourceCenterIndex;
+      Update();
+    }
+    
+    public void PreviousRight()
+    {
+      imageSourceRightIndex = CoerceIndex(imageSourceRightIndex - 1);
+      Update();
+    }
+
+    public void NextRight()
+    {
+      imageSourceRightIndex = CoerceIndex(imageSourceRightIndex + 1);
+      Update();
+    }
+
+    public int CoerceIndex(int index)
+    {
+      return CoerceIndex(index, imageSources.Count);
+    }
+
+    public static int CoerceIndex(int index, int count)
+    {
+      if (index < 0)
+        return count - 1;
+      else if (index >= count)
+        return 0;
+      else
+        return index;
+    }
+    
     #endregion
 
     #region --- Events ---
 
     private void ViewportLeft_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-      int count = imageSources.Count;
-      if (count > 0) 
-        imageSourceLeftIndex = (imageSourceLeftIndex + 1) % count;
-      Restart();
+      NextLeft();
+    }
+
+    private void ViewportLeft_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+      PreviousLeft();
     }
 
     private void ViewportCenter_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-      int count = imageSources.Count;
-      if (count > 0)
-        imageSourceCenterIndex = (imageSourceCenterIndex + 1) % count;
-      Restart();
+      NextCenter();
+    }
+
+    private void ViewportCenter_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+      PreviousCenter();
+    }
+
+    private void ViewportCenter_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+    {
+      CenterToLeftRight();
     }
 
     private void ViewportRight_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-      int count = imageSources.Count;
-      if (count > 0)
-        imageSourceRightIndex = (imageSourceRightIndex + 1) % count;
-      Restart();
+      NextRight();
+    }
+
+    private void ViewportRight_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+      PreviousRight();
     }
 
     #endregion

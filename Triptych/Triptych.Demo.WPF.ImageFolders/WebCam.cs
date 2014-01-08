@@ -1,4 +1,4 @@
-﻿//Version: 20140106
+﻿//Version: 20140108
 
 //Based on ZXing.net's WindowsFormsDemo
 
@@ -58,9 +58,6 @@ namespace Triptych.Demo.WPF.ImageFolders
       //The devices list
       ArrayList ListOfDevices = new ArrayList();
 
-      //The picture to be displayed
-      public PictureBox Container { get; set; }
-
       // Connect to the device.
       /// <summary>
       /// This function is used to load the list of the devices 
@@ -89,15 +86,14 @@ namespace Triptych.Demo.WPF.ImageFolders
       /// Function used to display the output from a video capture device, you need to create 
       /// a capture window.
       /// </summary>
-      public void OpenConnection()
+      public void OpenConnection(IntPtr parentHandle, int width, int height)
       {
          string DeviceIndex = Convert.ToString(DeviceID);
-         IntPtr oHandle = Container.Handle;
 
          // Open Preview window in picturebox .
          // Create a child window with capCreateCaptureWindowA so you can display it in a picturebox.
 
-         hHwnd = capCreateCaptureWindowA(ref DeviceIndex, WS_VISIBLE | WS_CHILD, 0, 0, 640, 480, oHandle.ToInt32(), 0);
+         hHwnd = capCreateCaptureWindowA(ref DeviceIndex, WS_VISIBLE | WS_CHILD, 0, 0, 640, 480, parentHandle.ToInt32(), 0);
 
          // Connect to device
          if (SendMessage(hHwnd, WM_CAP_DRIVER_CONNECT, DeviceID, 0) != 0)
@@ -109,11 +105,11 @@ namespace Triptych.Demo.WPF.ImageFolders
             // Start previewing the image from the camera
             SendMessage(hHwnd, WM_CAP_SET_PREVIEW, -1, 0);
             // Resize window to fit in picturebox
-            SetWindowPos(hHwnd, HWND_BOTTOM, 0, 0, Container.Height, Container.Width, SWP_NOMOVE | SWP_NOZORDER);
+            SetWindowPos(hHwnd, HWND_BOTTOM, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER);
          }
          else
          {
-            // Error connecting to device close window
+            // Error connecting to device, close window
             DestroyWindow(hHwnd);
          }
       }
@@ -138,7 +134,6 @@ namespace Triptych.Demo.WPF.ImageFolders
          if (data.GetDataPresent(typeof(Bitmap)))
          {
             var oImage = (Bitmap)data.GetData(typeof(Bitmap));
-            Container.Image = oImage;
             return oImage;
          }
 

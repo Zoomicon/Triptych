@@ -1,4 +1,4 @@
-﻿//Version: 20140106
+﻿//Version: 20140108
 //Based on ZXing.net's WindowsFormsDemo
 
 using System;
@@ -23,6 +23,8 @@ namespace Triptych.Demo.WPF.ImageFolders
 
     public Vision()
     {
+      resultPoints = new List<ResultPoint>();
+
       barcodeReader = new BarcodeReader
       {
         AutoRotate = true,
@@ -45,71 +47,17 @@ namespace Triptych.Demo.WPF.ImageFolders
         if (parsedResult != null)
           MessageBox.Show("2 - Parsed result:" + parsedResult.DisplayResult);
       };
-
-      resultPoints = new List<ResultPoint>();
     }
-
-    private void Decode(Bitmap image, bool tryMultipleBarcodes, IList<BarcodeFormat> possibleFormats)
-    {
-      resultPoints.Clear();
-  
-      var timerStart = DateTime.Now.Ticks;
-      Result[] results = null;
-      barcodeReader.Options.PossibleFormats = possibleFormats;
-      if (tryMultipleBarcodes)
-        results = barcodeReader.DecodeMultiple(image);
-      else
-      {
-        var result = barcodeReader.Decode(image);
-        if (result != null)
-        {
-          results = new[] { result };
-        }
-      }
-      var timerStop = DateTime.Now.Ticks;
-
-      if (results == null)
-      {
-        //txtContent.Text = "No barcode recognized";
-      }
-      //labDuration.Text = new TimeSpan(timerStop - timerStart).Milliseconds.ToString("0 ms");
-
-      if (results != null)
-      {
-        foreach (var result in results)
-        {
-          if (result.ResultPoints.Length > 0)
-          {
-            var rect = new Rectangle((int)result.ResultPoints[0].X, (int)result.ResultPoints[0].Y, 1, 1);
-            foreach (var point in result.ResultPoints)
-            {
-              if (point.X < rect.Left)
-                rect = new Rectangle((int)point.X, rect.Y, rect.Width + rect.X - (int)point.X, rect.Height);
-              if (point.X > rect.Right)
-                rect = new Rectangle(rect.X, rect.Y, rect.Width + (int)point.X - rect.X, rect.Height);
-              if (point.Y < rect.Top)
-                rect = new Rectangle(rect.X, (int)point.Y, rect.Width, rect.Height + rect.Y - (int)point.Y);
-              if (point.Y > rect.Bottom)
-                rect = new Rectangle(rect.X, rect.Y, rect.Width, rect.Height + (int)point.Y - rect.Y);
-            }
-            /*using (var g = picBarcode.CreateGraphics())
-            {
-              g.DrawRectangle(Pens.Green, rect);
-            }*/
-          }
-        }
-      }
-    }
-
-    public void Start()
+    
+    public void Start(IntPtr parentHandle, int width, int height)
     {
       if (wCam == null)
       {
-        wCam = new WebCam { Container = new PictureBox() };
+        wCam = new WebCam();
 
-        wCam.OpenConnection();
+        wCam.OpenConnection(parentHandle, width, height);
 
-        webCamTimer = new Timer();
+        webCamTimer = new Timer(); //Note: for WPF maybe should use a DispatchTimer instead
         webCamTimer.Tick += webCamTimer_Tick;
         webCamTimer.Interval = 200;
         webCamTimer.Start();
@@ -130,14 +78,13 @@ namespace Triptych.Demo.WPF.ImageFolders
     {
       webCamTimer.Stop();
       var bitmap = wCam.GetCurrentImage();
-      if (bitmap == null)
-        return;
+      if (bitmap == null) return;
+
       var reader = new BarcodeReader();
       var result = reader.Decode(bitmap);
       if (result != null)
-      {
-        MessageBox.Show("3 - " + result.BarcodeFormat.ToString() + " - " + result.Text);
-      }
+        MessageBox.Show("3 - " + result.BarcodeFormat.ToString() + " - " + result.Text); //TODO: raise some event here or call some callback proc
+
       webCamTimer.Start();
     }
 

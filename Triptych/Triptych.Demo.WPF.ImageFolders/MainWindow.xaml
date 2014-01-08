@@ -1,7 +1,7 @@
 ﻿<!--
 Project: Triptych (http://triptych.codeplex.com)
 Filename: Triptych.Demo.WPF.ImageFolders\MainWindow.xaml
-Version: 20140102
+Version: 20140109
 -->
 
 <Window
@@ -67,6 +67,7 @@ Version: 20140102
               Height="400"
               FlowDirection="RightToLeft"
               MouseLeftButtonDown="ViewportLeft_MouseLeftButtonDown"
+              MouseRightButtonDown="ViewportLeft_MouseRightButtonDown"
               />
 
             <Rectangle
@@ -78,6 +79,8 @@ Version: 20140102
               Width="450"
               Height="400"
               MouseLeftButtonDown="ViewportCenter_MouseLeftButtonDown"
+              MouseRightButtonDown="ViewportCenter_MouseRightButtonDown"
+              MouseWheel="ViewportCenter_MouseWheel"
               />
 
             <Rectangle
@@ -90,6 +93,7 @@ Version: 20140102
               Height="400"
               FlowDirection="RightToLeft"
               MouseLeftButtonDown="ViewportRight_MouseLeftButtonDown"
+              MouseRightButtonDown="ViewportRight_MouseRightButtonDown"
               />
 
           </Canvas>

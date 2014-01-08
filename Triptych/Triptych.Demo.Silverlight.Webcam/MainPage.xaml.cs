@@ -1,7 +1,7 @@
 ﻿/*
 Project: Triptych (http://triptych.codeplex.com)
 Filename: Triptych.Demo.Silverlight.Webcams\MainPage.xaml.cs
-Version: 20140106
+Version: 20140109
 */
 
 using System.Collections.Generic;
@@ -117,35 +117,103 @@ namespace Triptych.Demo.Silverlight.Webcams
       Start();
     }
 
+    public int CoerceIndex(int index)
+    {
+      return CoerceIndex(index, captureSources.Count);
+    }
+
+    public static int CoerceIndex(int index, int count)
+    {
+      if (index < 0)
+        return count - 1;
+      else if (index >= count)
+        return 0;
+      else
+        return index;
+    }
+
+    public void PreviousLeft()
+    {
+      captureSourceLeftIndex = CoerceIndex(captureSourceLeftIndex - 1);
+      Restart();
+    }
+
+    public void NextLeft()
+    {
+      captureSourceLeftIndex = CoerceIndex(captureSourceLeftIndex + 1);
+      Restart();
+    }
+
+    public void PreviousCenter()
+    {
+      captureSourceCenterIndex = CoerceIndex(captureSourceCenterIndex - 1);
+      Restart();
+    }
+
+    public void NextCenter()
+    {
+      captureSourceCenterIndex = CoerceIndex(captureSourceCenterIndex + 1);
+      Restart();
+    }
+
+    public void CenterToLeftRight()
+    {
+      captureSourceLeftIndex = captureSourceRightIndex = captureSourceCenterIndex;
+      Restart();
+    }
+
+    public void PreviousRight()
+    {
+      captureSourceRightIndex = CoerceIndex(captureSourceRightIndex - 1);
+      Restart();
+    }
+
+    public void NextRight()
+    {
+      captureSourceRightIndex = CoerceIndex(captureSourceRightIndex + 1);
+      Restart();
+    }
+    
     #endregion
 
     #region --- Events ---
 
     private void ViewportLeft_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-      int count = captureSources.Count;
-      if (count > 0) 
-        captureSourceLeftIndex = (captureSourceLeftIndex + 1) % count;
-      Restart();
+      NextLeft();
+    }
+
+    private void ViewportLeft_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+      PreviousLeft();
     }
 
     private void ViewportCenter_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-      int count = captureSources.Count;
-      if (count > 0)
-        captureSourceCenterIndex = (captureSourceCenterIndex + 1) % count;
-      Restart();
+      NextCenter();
     }
 
+    private void ViewportCenter_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+      PreviousCenter();
+    }
+
+    private void ViewportCenter_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+    {
+      CenterToLeftRight();
+    }
+    
     private void ViewportRight_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-      int count = captureSources.Count;
-      if (count > 0)
-        captureSourceRightIndex = (captureSourceRightIndex + 1) % count;
-      Restart();
+      NextRight();
+    }
+
+    private void ViewportRight_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+      PreviousRight();
     }
 
     #endregion
- 
+
   }
 }
