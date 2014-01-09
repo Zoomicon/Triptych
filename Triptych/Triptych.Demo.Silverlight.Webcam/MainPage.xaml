@@ -17,7 +17,7 @@ Version: 20140109
   <UserControl.Resources>
     <ResourceDictionary>
       <SolidColorBrush x:Key="ScreenBackground" Color="Black" />
-      <SolidColorBrush x:Key="TriptychBackground" Color="White" />     
+      <SolidColorBrush x:Key="TriptychBackground" Color="Black" />
     </ResourceDictionary>
   </UserControl.Resources>
   
