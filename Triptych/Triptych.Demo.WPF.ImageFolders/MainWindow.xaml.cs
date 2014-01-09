@@ -14,6 +14,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using ZXing.Client.Result;
 
 namespace Triptych.Demo.WPF.ImageFolders
 {
@@ -61,6 +62,7 @@ namespace Triptych.Demo.WPF.ImageFolders
      
     public void Init()
     {
+      InitVision();
       InitImages();
       InitAnimation();
 
@@ -215,6 +217,20 @@ namespace Triptych.Demo.WPF.ImageFolders
     #endregion
 
     #region Vision
+
+    public void InitVision()
+    {
+      vision.Recognized += result =>
+      {
+        /*
+        MessageBox.Show("1 - " + result.BarcodeFormat.ToString() + " - " + result.Text);
+        var parsedResult = ResultParser.parseResult(result);
+        if (parsedResult != null)
+          MessageBox.Show("2 - Parsed result:" + parsedResult.DisplayResult);
+        */
+        LoadImages(result.Text); //TODO: get last part of URL here instead (e.g. using tinyurl.com with names)
+      };
+    }
 
     public void StartVision()
     {

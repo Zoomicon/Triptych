@@ -1,25 +1,30 @@
-﻿//Version: 20140108
+﻿//Version: 20140109
 //Based on ZXing.net's WindowsFormsDemo
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 
 using ZXing;
-using ZXing.Client.Result;
 using ZXing.Common;
 
 namespace Triptych.Demo.WPF.ImageFolders
 {
   public class Vision
   {
+
+    #region --- Fields ---
+
     private WebCam wCam;
-    private Timer webCamTimer;
+    private Timer visionTimer;
     private readonly BarcodeReader barcodeReader;
     private readonly IList<ResultPoint> resultPoints;
     private EncodingOptions EncodingOptions { get; set; }
     private bool TryMultipleBarcodes { get; set; }
+
+    #endregion
+
+    #region --- Methods ---
 
     public Vision()
     {
@@ -29,9 +34,10 @@ namespace Triptych.Demo.WPF.ImageFolders
       {
         AutoRotate = true,
         TryInverted = true,
-        Options = new DecodingOptions { TryHarder = true}
+        Options = new DecodingOptions { TryHarder = true }
       };
-
+      
+      /*
       barcodeReader.ResultPointFound += point =>
       {
         if (point == null)
@@ -42,13 +48,12 @@ namespace Triptych.Demo.WPF.ImageFolders
 
       barcodeReader.ResultFound += result =>
       {
-        MessageBox.Show("1 - " + result.BarcodeFormat.ToString() + " - " + result.Text);
-        var parsedResult = ResultParser.parseResult(result);
-        if (parsedResult != null)
-          MessageBox.Show("2 - Parsed result:" + parsedResult.DisplayResult);
+        if (Recognized != null)
+          Recognized(result);
       };
+      */
     }
-    
+
     public void Start(IntPtr parentHandle, int width, int height)
     {
       if (wCam == null)
@@ -57,10 +62,10 @@ namespace Triptych.Demo.WPF.ImageFolders
 
         wCam.OpenConnection(parentHandle, width, height);
 
-        webCamTimer = new Timer(); //Note: for WPF maybe should use a DispatchTimer instead
-        webCamTimer.Tick += webCamTimer_Tick;
-        webCamTimer.Interval = 200;
-        webCamTimer.Start();
+        visionTimer = new Timer(); //Note: for WPF maybe should use a DispatchTimer instead
+        visionTimer.Tick += visionTimer_Tick;
+        visionTimer.Interval = 200;
+        visionTimer.Start();
       }
       else
         Stop();
@@ -68,25 +73,36 @@ namespace Triptych.Demo.WPF.ImageFolders
 
     public void Stop()
     {
-      webCamTimer.Stop();
-      webCamTimer = null;
+      visionTimer.Stop();
+      visionTimer = null;
       wCam.Dispose();
       wCam = null;
     }
 
-    void webCamTimer_Tick(object sender, EventArgs e)
+    #endregion
+
+    #region --- Events ---
+
+    public event Action<ZXing.Result> Recognized;
+
+    void visionTimer_Tick(object sender, EventArgs e)
     {
-      webCamTimer.Stop();
-      var bitmap = wCam.GetCurrentImage();
-      if (bitmap == null) return;
+      if (Recognized != null)
+      {
+        visionTimer.Stop();
+        var bitmap = wCam.GetCurrentImage();
+        if (bitmap == null) return;
 
-      var reader = new BarcodeReader();
-      var result = reader.Decode(bitmap);
-      if (result != null)
-        MessageBox.Show("3 - " + result.BarcodeFormat.ToString() + " - " + result.Text); //TODO: raise some event here or call some callback proc
+        var reader = new BarcodeReader();
+        var result = reader.Decode(bitmap);
+        if (result!=null)
+          Recognized(result);
 
-      webCamTimer.Start();
+        visionTimer.Start();
+      }
     }
 
- }
+    #endregion
+
+  }
 }
