@@ -9,6 +9,9 @@ Version: 20140109
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   Title="Triptych" 
+  WindowState="Maximized"
+  WindowStyle="None"
+  ResizeMode="NoResize"
   Width="1024" Height="768"
   >
 
