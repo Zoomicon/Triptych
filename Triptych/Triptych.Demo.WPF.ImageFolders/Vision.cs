@@ -1,9 +1,15 @@
-﻿//Version: 20140109
+﻿/*
+Project: Triptych (http://triptych.codeplex.com)
+Filename: Vision.cs
+Version: 20140112
+*/
+
 //Based on ZXing.net's WindowsFormsDemo
 
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Windows.Threading;
 
 using ZXing;
 using ZXing.Common;
@@ -16,7 +22,8 @@ namespace Triptych.Demo.WPF.ImageFolders
     #region --- Fields ---
 
     private WebCam wCam;
-    private Timer visionTimer;
+    //private DispatcherTimer visionTimer; //avoid using a Timer with WPF
+    private Timer visionTimer; //if we use a DispatchTimer it gets in same queue as animation timers and may not respond fast enough
     private readonly BarcodeReader barcodeReader;
     private readonly IList<ResultPoint> resultPoints;
     private EncodingOptions EncodingOptions { get; set; }
@@ -54,17 +61,21 @@ namespace Triptych.Demo.WPF.ImageFolders
       */
     }
 
-    public void Start(IntPtr parentHandle, int width, int height)
+    public void Start(IntPtr parentHandle, int displayWidth, int displayHeight, int captureWidth, int captureHeight, int deviceID = 0)
     {
       if (wCam == null)
       {
         wCam = new WebCam();
 
-        wCam.OpenConnection(parentHandle, width, height);
+        wCam.OpenConnection(parentHandle, displayWidth, displayHeight, captureWidth, captureHeight, deviceID);
 
-        visionTimer = new Timer(); //Note: for WPF maybe should use a DispatchTimer instead
+        //visionTimer = new DispatcherTimer(); //Note: for WPF maybe should use a DispatchTimer instead
+        //visionTimer.Interval = new TimeSpan(0,0,0,0,200); //200 msec
+
+        visionTimer = new Timer();
+        visionTimer.Interval = 200; //msec
+        
         visionTimer.Tick += visionTimer_Tick;
-        visionTimer.Interval = 200;
         visionTimer.Start();
       }
       else

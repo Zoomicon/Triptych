@@ -1,7 +1,7 @@
 ﻿/*
 Project: Triptych (http://triptych.codeplex.com)
-Filename: Triptych.Demo.Silverlight.Webcam\MainPage.xaml.cs
-Version: 20140109
+Filename: MainWindow.xaml.cs
+Version: 20140112
 */
 
 using System;
@@ -26,15 +26,20 @@ namespace Triptych.Demo.WPF.ImageFolders
 
     #region --- Constants ---
 
+    const int DEVICE_ID = 0; //if you want to use an external camera with a laptop, better disable the inner camera (or uninstall its driver). Make sure you run the app as an administrator (right click, Properties, Compatibility settings, check the Run as Administrator option). Can disable UAC (User Access Control) to avoid Windows Vista+ security prompts
+    const string URI_PREFIX = "http://bit.ly/GB-";
+    const string IMAGE_EXTENSIONS = "jpg|png|bmp"; //GIF not supported //TODO: check if BMP are supported
     const string BASE_FOLDER = "Photos";
-    const string DEFAULT_FOLDER = "FruitBowl";
-    const int DELAY_CENTER = 10; //sec
-    const int DELAY_SIDES = 20; //sec
+    const string STARTUP_FOLDER = "Startup";
+    const int DELAY_CENTER = 3; //sec
+    const int DELAY_SIDES = 5; //sec
 
     #endregion
     
     #region --- Fields ---
 
+    string lastFolder = "";
+    bool loadingImages = false;
     bool initialized = false;
     List<ImageSource> imageSources = new List<ImageSource>();
     ImageBrush imageBrushLeft, imageBrushCenter, imageBrushRight;
@@ -78,22 +83,34 @@ namespace Triptych.Demo.WPF.ImageFolders
 
     private void InitImages()
     {
-      LoadImages(DEFAULT_FOLDER);
+      LoadImages(STARTUP_FOLDER);
       InitBrushes();
     }
-
-    private void LoadImages(string folder)
+    
+    private void LoadImages(string folder, bool startAnimation = false)
     {
+      if (loadingImages || String.Equals(folder, lastFolder, StringComparison.OrdinalIgnoreCase))
+        return; //do not try to load the same image set again, looks strange (like going fast, since we may get multiple recognition events and it keeps trying to reload the same stuff)
+
+      loadingImages = true;
       try
       {
-        var imageFilenames = Directory.EnumerateFiles(Path.Combine(new String[]{System.AppDomain.CurrentDomain.BaseDirectory, BASE_FOLDER, folder})).Where(file => Regex.IsMatch(file, @"^.+\.(jpg|png|bmp)$"));
+        var imageFilenames = Directory.EnumerateFiles(Path.Combine(new String[]{System.AppDomain.CurrentDomain.BaseDirectory, BASE_FOLDER, folder})).Where(file => Regex.IsMatch(file, @"^.+\.(" + IMAGE_EXTENSIONS + ")$")).Shuffle(new Random());
+        imageSources.Clear();
         foreach (string filename in imageFilenames)
           imageSources.Add(new BitmapImage(new Uri(filename, UriKind.RelativeOrAbsolute)));
+
+        lastFolder = folder;
+
+        ShowFirstImage();
       }
       catch
       {
-        ClearImages();
-        return;
+        //NOP //Dispatcher.BeginInvoke((Action)(() => ClearImages()));
+      }
+      finally
+      {
+        loadingImages=false;
       }
     }
 
@@ -108,6 +125,12 @@ namespace Triptych.Demo.WPF.ImageFolders
       ViewportCenter.Fill = imageBrushCenter;
       ViewportLeft.Fill = imageBrushLeft;
       ViewportRight.Fill = imageBrushRight;
+    }
+
+    public void ShowFirstImage()
+    {
+      imageSourceLeftIndex = imageSourceCenterIndex = imageSourceRightIndex = 0;
+      UpdateImages();
     }
 
     public void UpdateImages()
@@ -222,19 +245,29 @@ namespace Triptych.Demo.WPF.ImageFolders
     {
       vision.Recognized += result =>
       {
-        /*
-        MessageBox.Show("1 - " + result.BarcodeFormat.ToString() + " - " + result.Text);
+        //MessageBox.Show(result.BarcodeFormat.ToString());
         var parsedResult = ResultParser.parseResult(result);
         if (parsedResult != null)
-          MessageBox.Show("2 - Parsed result:" + parsedResult.DisplayResult);
-        */
-        LoadImages(result.Text); //TODO: get last part of URL here instead (e.g. using tinyurl.com with names)
+        {
+          //MessageBox.Show(parsedResult.DisplayResult);
+          ParsedResultType resultType = parsedResult.Type;
+          switch (resultType)
+          {
+            case ParsedResultType.URI:
+              LoadImages(result.Text.TrimLeft(URI_PREFIX), startAnimation:true); //remove URI prefix to get the value
+              break;
+            default: //handling ParsedResultType.TEXT and all other ParsedResultType values as text
+              LoadImages(result.Text, startAnimation:true);
+              break;
+          }
+        }
+
       };
     }
 
     public void StartVision()
     {
-      vision.Start(new WindowInteropHelper(this).Handle, 64, 48); //(int)Width, (int)Height
+      vision.Start(new WindowInteropHelper(this).Handle, 640, 640, 64, 64, DEVICE_ID); //(int)Width, (int)Height
     }
 
     public void StopVision()
@@ -262,17 +295,7 @@ namespace Triptych.Demo.WPF.ImageFolders
 
     public int CoerceIndex(int index)
     {
-      return CoerceIndex(index, imageSources.Count);
-    }
-
-    public static int CoerceIndex(int index, int count)
-    {
-      if (index < 0)
-        return count - 1;
-      else if (index >= count)
-        return 0;
-      else
-        return index;
+      return Utils.CoerceIndex(index, imageSources.Count);
     }
 
     #endregion
@@ -285,12 +308,14 @@ namespace Triptych.Demo.WPF.ImageFolders
 
     private void TimerCenter_Tick(object sender, EventArgs e)
     {
-      NextCenter();
+      if (!loadingImages)
+        NextCenter();
     }
 
     private void TimerSides_Tick(object sender, EventArgs e)
     {
-      NextLeftRight(); //do in a single step
+      if (!loadingImages)
+        NextLeftRight(); //do in a single step
     }
     
     #endregion

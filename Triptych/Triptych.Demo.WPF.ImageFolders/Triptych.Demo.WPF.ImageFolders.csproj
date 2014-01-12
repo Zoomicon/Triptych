@@ -58,6 +58,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Utils.cs" />
     <Compile Include="Vision.cs" />
     <Compile Include="WebCam.cs" />
     <Page Include="MainWindow.xaml">
