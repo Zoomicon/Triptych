@@ -1,7 +1,7 @@
 ﻿/*
 Project: Triptych (http://triptych.codeplex.com)
 Filename: MainWindow.xaml.cs
-Version: 20140112
+Version: 20140115
 */
 
 using System;
@@ -27,12 +27,18 @@ namespace Triptych.Demo.WPF.ImageFolders
     #region --- Constants ---
 
     const int DEVICE_ID = 0; //if you want to use an external camera with a laptop, better disable the inner camera (or uninstall its driver). Make sure you run the app as an administrator (right click, Properties, Compatibility settings, check the Run as Administrator option). Can disable UAC (User Access Control) to avoid Windows Vista+ security prompts
+    const int CAPTURE_WIDTH = 1024;
+    const int CAPTURE_HEIGHT = 768;
+    const int PREVIEW_WIDTH = 64;
+    const int PREVIEW_HEIGHT = 64;
+    
     const string URI_PREFIX = "http://bit.ly/GB-";
     const string IMAGE_EXTENSIONS = "jpg|png|bmp"; //GIF not supported //TODO: check if BMP are supported
     const string BASE_FOLDER = "Photos";
     const string STARTUP_FOLDER = "Startup";
-    const int DELAY_CENTER = 3; //sec
-    const int DELAY_SIDES = 5; //sec
+
+    const int DELAY_CENTER = 4; //sec
+    const int DELAY_SIDES = 9; //sec
 
     #endregion
     
@@ -79,8 +85,7 @@ namespace Triptych.Demo.WPF.ImageFolders
     }
 
     #region Media
-
-
+    
     private void InitImages()
     {
       LoadImages(STARTUP_FOLDER);
@@ -267,7 +272,11 @@ namespace Triptych.Demo.WPF.ImageFolders
 
     public void StartVision()
     {
-      vision.Start(new WindowInteropHelper(this).Handle, 640, 640, 64, 64, DEVICE_ID); //(int)Width, (int)Height
+      int w = PREVIEW_WIDTH;
+      int h = PREVIEW_HEIGHT;
+      int x = (int)(Width - w) / 2;
+      int y = (int)(Height - h - h / 3);
+      vision.Start(new WindowInteropHelper(this).Handle, CAPTURE_WIDTH, CAPTURE_HEIGHT, x, y, w, h, DEVICE_ID); //(int)Width, (int)Height
     }
 
     public void StopVision()
@@ -281,7 +290,7 @@ namespace Triptych.Demo.WPF.ImageFolders
     {
       UpdateImages();
       StartAnimation();
-      StartVision();
+      //StartVision(); //starting at SizeChanged event
     }
 
     public void Stop()
@@ -303,6 +312,24 @@ namespace Triptych.Demo.WPF.ImageFolders
     #endregion
 
     #region --- Events ---
+
+    #region Focus
+
+    private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+      StopVision();
+      StartVision();
+    }
+
+    private void Window_LostFocus(object sender, RoutedEventArgs e)
+    {
+      Topmost = true; //bring to front again
+      Activate(); //grab focus again (so that one can press ALT+F4 to close without first clicking the window if it is on top but other has focus)
+    }
+
+    #endregion
+
+    #endregion
 
     #region Timers
 
@@ -356,8 +383,6 @@ namespace Triptych.Demo.WPF.ImageFolders
     {
       PreviousRight();
     }
-
-    #endregion
 
     #endregion
 
