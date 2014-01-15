@@ -29,8 +29,9 @@ namespace Triptych.Demo.WPF.ImageFolders
     const int DEVICE_ID = 0; //if you want to use an external camera with a laptop, better disable the inner camera (or uninstall its driver). Make sure you run the app as an administrator (right click, Properties, Compatibility settings, check the Run as Administrator option). Can disable UAC (User Access Control) to avoid Windows Vista+ security prompts
     const int CAPTURE_WIDTH = 1024;
     const int CAPTURE_HEIGHT = 768;
-    const int PREVIEW_WIDTH = 64;
-    const int PREVIEW_HEIGHT = 64;
+    const bool PREVIEW_VISIBLE = false;
+    const int PREVIEW_WIDTH = 45;
+    const int PREVIEW_HEIGHT = 45;
     
     const string URI_PREFIX = "http://bit.ly/GB-";
     const string IMAGE_EXTENSIONS = "jpg|png|bmp"; //GIF not supported //TODO: check if BMP are supported
@@ -274,9 +275,9 @@ namespace Triptych.Demo.WPF.ImageFolders
     {
       int w = PREVIEW_WIDTH;
       int h = PREVIEW_HEIGHT;
-      int x = (int)(Width - w) / 2;
-      int y = (int)(Height - h - h / 3);
-      vision.Start(new WindowInteropHelper(this).Handle, CAPTURE_WIDTH, CAPTURE_HEIGHT, x, y, w, h, DEVICE_ID); //(int)Width, (int)Height
+      int x = (int)(Width / 2) + w;
+      int y = (int)Height; //+h
+      vision.Start(new WindowInteropHelper(this).Handle, CAPTURE_WIDTH, CAPTURE_HEIGHT, PREVIEW_VISIBLE, x, y, w, h, DEVICE_ID);
     }
 
     public void StopVision()

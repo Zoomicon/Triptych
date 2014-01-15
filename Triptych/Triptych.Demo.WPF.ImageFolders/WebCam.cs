@@ -1,7 +1,7 @@
 ﻿/*
 Project: Triptych (http://triptych.codeplex.com)
 Filename: WebCam.cs
-Version: 20140113
+Version: 20140115
 */
 
 //Based on ZXing.net's WindowsFormsDemo
@@ -90,7 +90,7 @@ namespace Triptych.Demo.WPF.ImageFolders
     /// Function used to display the output from a video capture device, you need to create 
     /// a capture window.
     /// </summary>
-    public void OpenConnection(IntPtr parentHandle, int captureWidth, int captureHeight, int posx, int posy, int displayWidth, int displayHeight, int theDeviceID = 0)
+    public void OpenConnection(IntPtr parentHandle, int captureWidth, int captureHeight, bool previewVisible, int posx, int posy, int displayWidth, int displayHeight, int theDeviceID = 0)
     {
       deviceID = theDeviceID;
 
@@ -99,7 +99,8 @@ namespace Triptych.Demo.WPF.ImageFolders
       // Open Preview window in picturebox .
       // Create a child window with capCreateCaptureWindowA so you can display it in a picturebox.
 
-      hHwnd = capCreateCaptureWindowA(ref DeviceIndex, WS_VISIBLE | WS_CHILD, 0, 0, captureWidth, captureHeight, parentHandle.ToInt32(), 0);
+      int dwStyle = (previewVisible) ? WS_VISIBLE : 0;
+      hHwnd = capCreateCaptureWindowA(ref DeviceIndex, dwStyle | WS_CHILD, posx, posy, captureWidth, captureHeight, parentHandle.ToInt32(), 0);
 
       // Connect to device
       if (SendMessage(hHwnd, WM_CAP_DRIVER_CONNECT, deviceID, 0) != 0)

@@ -1,7 +1,7 @@
 ﻿/*
 Project: Triptych (http://triptych.codeplex.com)
 Filename: Vision.cs
-Version: 20140113
+Version: 20140115
 */
 
 //Based on ZXing.net's WindowsFormsDemo
@@ -61,13 +61,13 @@ namespace Triptych.Demo.WPF.ImageFolders
       */
     }
 
-    public void Start(IntPtr parentHandle, int captureWidth, int captureHeight, int posx, int posy, int displayWidth, int displayHeight, int deviceID = 0)
+    public void Start(IntPtr parentHandle, int captureWidth, int captureHeight, bool previewVisible, int posx, int posy, int displayWidth, int displayHeight, int deviceID = 0)
     {
       if (wCam == null)
       {
         wCam = new WebCam();
 
-        wCam.OpenConnection(parentHandle, captureWidth, captureHeight, posx, posy, displayWidth, displayHeight, deviceID);
+        wCam.OpenConnection(parentHandle, captureWidth, captureHeight, previewVisible, posx, posy, displayWidth, displayHeight, deviceID);
 
         //visionTimer = new DispatcherTimer(); //Note: for WPF maybe should use a DispatchTimer instead
         //visionTimer.Interval = new TimeSpan(0,0,0,0,200); //200 msec
