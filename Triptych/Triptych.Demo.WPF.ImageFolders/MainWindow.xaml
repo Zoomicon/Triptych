@@ -1,7 +1,7 @@
 ﻿<!--
 Project: Triptych (http://triptych.codeplex.com)
 Filename: Triptych.Demo.WPF.ImageFolders\MainWindow.xaml
-Version: 20140113
+Version: 20140116
 -->
 
 <Window
@@ -12,6 +12,7 @@ Version: 20140113
   Topmost="True"
   WindowState="Maximized"
   WindowStyle="None"
+  Cursor="None"
   ResizeMode="NoResize"
   Width="1024" Height="768"
   LostFocus="Window_LostFocus"
