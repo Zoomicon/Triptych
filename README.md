@@ -11,7 +11,7 @@ Dolce Vita (GriikBuffet) at Anti-Design 2014 (Technopolis, Athens)
 
 Software
 
-* Triptych.Demo.Silverlight.WebCam
+* __Triptych.Demo.Silverlight.WebCam__
 
     This is a Silverlight-based web application, that shows a Triptych, that is a tripartite 1:2:1-sized display using live video feeds from one or more webcams. 
 
@@ -21,7 +21,7 @@ Software
 
     Selecting the same video feed for each pane of the triptych creates an interesting kaleidoscope-like effect, since the vertical borders between the triptych panes are practically mirroring axes.
 
-* Triptych.Demo.WPF.ImageFolders
+* __Triptych.Demo.WPF.ImageFolders__
 
     This is a WPF-based Windows desktop application, that shows a Triptych, that is a 1:2:1-sized display using images from a local file folder that are organized in thematic subfolders (e.g. Travel, Sports etc.). There is also a special "Startup" subfolder with images to be shown when the system starts up, until a user first interacts with it.
 
