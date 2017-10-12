@@ -33,7 +33,7 @@ Software
 
     Periodically, the same image may be picked for both the middle an the left/right panes on the triptych, creating an interesting kaleidoscope-like effect, since the vertical borders between the triptych panes are practically mirroring axes. This effect was inspired from the left and right doors of a tripartite buffet furniture with 1:2:1 part ratios, that open to respective directions, splitting a view in half and flipping its parts outwards to the left and right sides.
 
-_Using the cloud:_
+   __Using the cloud:__
 
    The images folder and the application can be on Dropbox or other Cloud Storage solution that is synchronized to a local folder so that they are easily updated from a remote location. This also facilitates offline updates, even when the installation computer is shut down, so that it catches up with any updates when the system and local cloud storage synchronization agent is restarted.
 
