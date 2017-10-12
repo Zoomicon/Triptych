@@ -1,15 +1,13 @@
 ## Triptych
-Interactive visual art experiments on the theme of triptych displays
-
 Triptych is software for interactive visual art experiments on the theme of triptych displays.
 
-Technologies: WPF, Silverlight, QR code recognition.
+Technologies: XAML (WPF & Silverlight), Webcam, QR code recognition.
 
-Installations
+## Installations
 
 Dolce Vita (GriikBuffet) at Anti-Design 2014 (Technopolis, Athens)
 
-Software
+## Software
 
 * __Triptych.Demo.Silverlight.WebCam__
 
