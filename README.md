@@ -6,6 +6,8 @@ Technologies: XAML (WPF & Silverlight), Webcam, QR code recognition.
 ### Installations
 
 Dolce Vita (GriikBuffet) at Anti-Design 2014 (Technopolis, Athens)
+* https://github.com/Zoomicon/Triptych/wiki/Dolce-Vita
+* http://www.technopolis-athens.com/web/guest/events/~/eventsbrowser/15097/29/0/0
 
 ### Software
 
